@@ -13,8 +13,8 @@ const Tutor = require("./tutors")(sequelize, DataTypes);
 Module.hasMany(Class);
 Class.belongsTo(Module);
 
-Class.hasOne(Tutor);
-Tutor.belongsTo(Class);
+Tutor.hasMany(Class);
+Class.belongsTo(Tutor);
 
 Student.hasOne(Address);
 Address.belongsTo(Student);

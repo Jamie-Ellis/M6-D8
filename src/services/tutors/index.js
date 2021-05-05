@@ -35,8 +35,8 @@ router
           //     { topic: { [Op.iLike]: "%" + req.query.className + "%" } },
           //   ],
           // },
-          include: { model: Student, through: { attributes: [] } },
-          include: {model: Module, through: { attributes: []} },
+          include:[ { model: Student, through: { attributes: [] } }, {model: Module }, Tutor],
+       
         },
       });
       res.send(data);
