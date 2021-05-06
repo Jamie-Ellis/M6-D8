@@ -1,23 +1,18 @@
-
 module.exports = (sequelize, DataTypes) => {
-    const Module = sequelize.define("module", {
+    const Review = sequelize.define("review", {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
+      text: {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      starts_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      ends_at: {
-        type: DataTypes.DATE,
+      user: {
+        type: DataTypes.TEXT,
         allowNull: false,
       },
     });
-    return Module;
+    return Review;
   };

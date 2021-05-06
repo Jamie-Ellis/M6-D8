@@ -1,28 +1,42 @@
 const { Sequelize, DataTypes } = require("sequelize");
+const Article = require("./articles")
+const Author = require("./authors")
+const Category = require("./categories")
+const Review = require("./reviews")
 const sequelize = new Sequelize(
   process.env.PGDATABASE,
   process.env.PGUSER,
   process.env.PGPASSWORD,
-  { port: process.env.PGPORT, host: process.env.PGHOST, dialect: "postgres" }
+  {
+    host: process.env.PGHOST,
+    dialect: "postgres",
+    dialectOptions:{
+      ssl:{
+        require:true, 
+        rejectUnauthorized:false
+      }
+    }
+  }
 );
-const Student = require("./students")(sequelize, DataTypes);
-const Module = require("./modules")(sequelize, DataTypes);
-const Class = require("./classes")(sequelize, DataTypes);
-const Address = require("./address")(sequelize, DataTypes);
-const Tutor = require("./tutors")(sequelize, DataTypes);
-Module.hasMany(Class);
-Class.belongsTo(Module);
 
-Tutor.hasMany(Class);
-Class.belongsTo(Tutor);
+const models = {
+  Author:Author(sequelize, DataTypes),
+  Category:Category(sequelize, DataTypes),
+  Article:Article(sequelize, DataTypes),
+  Review:Review(sequelize, DataTypes),
+  sequelize:sequelize
 
-Student.hasOne(Address);
-Address.belongsTo(Student);
-Class.belongsToMany(Student, { through: "StudentClass", timestamps: false });
-Student.belongsToMany(Class, { through: "StudentClass", timestamps: false });
+}
+
+Object.keys(models).forEach(modelName=> {
+ 
+  if('associate' in models[modelName]) {
+    models[modelName].associate(models)
+  }
+})
 sequelize
   .authenticate()
   .then(() => console.log("Connection established"))
-  .catch((e) => console.log(e));
+  .catch((e) => console.log("Connection failed ", e));
 
-module.exports = { sequelize, Student, Module, Class, Address, Tutor };
+module.exports = models;

@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const Student = sequelize.define(
-      "student",
+    const Category = sequelize.define(
+      "category",
       {
         id: {
           type: DataTypes.INTEGER,
@@ -10,15 +10,8 @@ module.exports = (sequelize, DataTypes) => {
         name: {
           type: DataTypes.TEXT,
           allowNull: false,
-        },
-        lastname: {
-          type: DataTypes.TEXT,
-          allowNull: false,
-        },
+        }
       },
-      {
-        timestamps: false,
-      }
     );
-    return Student;
+    return Category;
   };

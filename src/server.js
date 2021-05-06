@@ -1,17 +1,33 @@
 const express = require("express");
-const cors = require("cors");
+
+const articlesRouter = require("./services/articles");
+const authorsRouter = require("./services/authors");
+const categoriesRouter = require("./services/categories");
+const reviewsRouter = require("./services/reviews");
 const db = require("./db");
-const services = require("./services");
-const app = express();
+const cors = require("cors");
 
-app.use(cors());
-app.use(express.json());
-app.use("/api", services);
-const port = process.env.PORT || 5000;
+const server = express();
 
-db.sequelize.sync({ force: true }).then(() => {
-  app.listen(port, () => console.log("server is running: " + port));
-  app.on("error", (error) =>
-    console.info(" ❌ Server is not running due to : ", error)
-  );
-});
+server.use(cors());
+server.use(express.json());
+server.use("/articles", articlesRouter);
+server.use("/authors", authorsRouter);
+server.use("/categories", categoriesRouter);
+server.use("/reviews", reviewsRouter);
+db.sequelize.sync({ force: false }).then((result) => {
+ return db.User.findByPk(1)
+  
+}).then(async user=> {
+  if(!user) {
+    const newUser = await db.User.create({
+      firstName: "Jamie",
+      lastName: "Ellis",
+      email: "jamiekyaellis@gmail.com",
+    })
+  }
+}).then(()=>{
+  server.listen(process.env.PORT || 3002, () => {
+    console.log("server is running on port ", process.env.PORT || 3002);
+  });
+})
